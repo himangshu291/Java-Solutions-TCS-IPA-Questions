@@ -1,123 +1,111 @@
-package IPA11;
-import java.util.*;
+import java.util.Scanner;
 
-import PlayerIPA;
-public class IPA11
-{
-	public static void main(String[] args)
-	{
-		Scanner sc = new Scanner(System.in);
-		PlayerIPA[] p = new PlayerIPA[4];
-		for(int i=0; i<4; i++)
-		{
-			int a = sc.nextInt();sc.nextLine();
-			String b = sc.nextLine();
-			String c = sc.nextLine();
-			int d = sc.nextInt();sc.nextLine();
-		
-			p[i] = new PlayerIPA(a,b,c,d);
-		}
-		String s = sc.nextLine();
-		String l = sc.nextLine();
+class Player {
+    private int playerId;
+    private String skill;
+    private String level;
+    private int points;
 
-		int ans1 = findPointsForGivenSkill(p,s);
-		if(ans1!=0)
-		{
-			System.out.println(ans1);
-		}
-		else
-		{
-			System.out.println("The given Skill is not available");
-		}
+    // Parameterized constructor
+    public Player(int playerId, String skill, String level, int points) {
+        this.playerId = playerId;
+        this.skill = skill;
+        this.level = level;
+        this.points = points;
+    }
 
-		int ans2 = getPlayerBasedOnLevel(p,s,l);
-		if(ans2!=0)
-		{
-			System.out.println(ans2);
-		}
-		else
-		{
-			System.out.println("No player is available with specified level, skill and eligibility points");
-		}
-		
-	}
-	public static int findPointsForGivenSkill(PlayerIPA[]p,String s)
-	{
-		int sum = 0;
-		for(int i=0; i<p.length; i++)
-		{
-			if(p[i].getSkill().equalsIgnoreCase(s))
-			{
-				sum = sum+p[i].getPoints();
-			}
-		}
-		if(sum>0)
-		{
-			return sum;
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	public static int getPlayerBasedOnLevel(PlayerIPA[]p,String s, String l)
-	{
-		for(int i=0; i<p.length; i++)
-		{
-			if(p[i].getSkill().equalsIgnoreCase(s) && p[i].getLevel().equalsIgnoreCase(l) && p[i].getPoints()>=20)
-			{
-				return p[i].getPlayerId();
-			}
-		}
-		return 0;
-	}
+    // Getters
+    public int getPlayerId() {
+        return playerId;
+    }
 
+    public String getSkill() {
+        return skill;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    // Setters
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 }
-class PlayerIPA
-{
-	private int playerId;
-	private String skill;
-	private String level;
-	private int points;
 
-	public PlayerIPA(int playerId, String skill, String level, int points)
-	{
-		this.playerId = playerId;
-		this.skill = skill;
-		this.level = level;
-		this.points = points;
-	}	
-	
-	public int getPlayerId()
-	{
-		return playerId;
-	}
-	public void setPlayerId(int playerId)
-	{
-		this.playerId = playerId;
-	}
-	public String getSkill()
-	{
-		return skill;
-	}
-	public void setSkill(String skill)
-	{
-		this.skill = skill;
-	}
-	public String getLevel()
-	{
-		return level;
-	}
-	public void setLevel(String level)
-	{
-		this.level = level;
-	}
-	public int getPoints()
-	{
-		return points;
-	}
-	public void setPoints(int points)
-	{
-		this.points = points;
-	}
+class Solution {
+    public static int findPointsForGivenSkill(Player[] players, String skill) {
+        int totalPoints = 0;
+        for (Player player : players) {
+            if (player.getSkill().equalsIgnoreCase(skill)) {
+                totalPoints += player.getPoints();
+            }
+        }
+        return totalPoints;
+    }
+
+    public static Player getPlayerBasedOnLevel(Player[] players, String level, String skill) {
+        for (Player player : players) {
+            if (player.getSkill().equalsIgnoreCase(skill) && 
+                player.getLevel().equalsIgnoreCase(level) && 
+                player.getPoints() >= 20) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        Player[] players = new Player[4];
+        
+        // Input 4 player details
+        for (int i = 0; i < 4; i++) {
+            int playerId = sc.nextInt();
+            sc.nextLine();  // Consume newline
+            String skill = sc.nextLine();
+            String level = sc.nextLine();
+            int points = sc.nextInt();
+            players[i] = new Player(playerId, skill, level, points);
+        }
+
+        sc.nextLine(); // Consume newline
+        
+        // Input skill and level
+        String skill = sc.nextLine();
+        String level = sc.nextLine();
+
+        // Call findPointsForGivenSkill method
+        int totalPoints = findPointsForGivenSkill(players, skill);
+        if (totalPoints > 0) {
+            System.out.println(totalPoints);
+        } else {
+            System.out.println("The given Skill is not available");
+        }
+
+        // Call getPlayerBasedOnLevel method
+        Player resultPlayer = getPlayerBasedOnLevel(players, level, skill);
+        if (resultPlayer != null) {
+            System.out.println(resultPlayer.getPlayerId());
+        } else {
+            System.out.println("No player is available with specified level, skill and eligibility points");
+        }
+    }
 }
